@@ -1,0 +1,13 @@
+name: WineReviews
+title: WineReviews
+username:
+account: erindugan
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 384964
+bundleId: 1492047
+url: https://erindugan.shinyapps.io/WineReviews/
+when: 1532115912.40977
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: winecode_clean.R

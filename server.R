@@ -7,8 +7,13 @@ shinyServer(function(input, output) {
     })
 
   output$selected_var <- renderPlot({
-    ggplot(data = (wine_df %>% filter(variety == input$varietal)), aes(x=price,y=ave_score)) + 
-      geom_point(aes(color=price))
+    ggplot(data = (wine_df %>% 
+                     filter(variety == input$varietal) %>%
+                     distinct(title, price, ave_score)), 
+           aes(x=price,y=ave_score)) + 
+      geom_point(aes(color=price)) + 
+      geom_smooth(method = "loess") + 
+      coord_cartesian(xlim = c(0,500), ylim = c(75,100))
   })
   
 })

@@ -6,7 +6,7 @@ ui <- fluidPage(
   titlePanel("Making Sense of Wine Reviews"),
   
   sidebarLayout(
-    sidebarPanel(strong("Sidebar panel basic text", style = "color: purple"),
+    sidebarPanel(strong("Sidebar Title", style = "color: purple"),
                  
                  selectInput("varietal", 
                              label = "Choose a varietal:",
