@@ -2,34 +2,36 @@ library(shiny)
 
 # Define UI ----
 ui <- fluidPage(
-
+  
   titlePanel("Making Sense of Wine Reviews"),
   
   sidebarLayout(
-    sidebarPanel(strong("Sidebar Title", style = "color: purple"),
+    sidebarPanel(strong("Make Your Selections:", style = "color: purple"),
                  
                  selectInput("varietal", 
                              label = "Choose a varietal:",
                              choices = top_varieties,
-                             selected = "Pinot Noir")
+                             selected = "Pinot Noir"), 
                  
-                  ), #End sidebarPanel ----
+                 sliderInput("pricerange",
+                             label = "Pick a price range ($):",
+                             min = 0,
+                             max = 3500,
+                             value = c(10,2000))
+                 
+    ), #End sidebarPanel ----
     
     mainPanel(h1("Price versus Wine Rating", align = "center", style = "color:purple"),
               div(img(src = "bottles.jpeg"), style="text-align: center;"),
-              # h2("Second level title", align = "center"),
-              # h3("Third level title", align = "center"),
-              # h4("Fourth level title", align = "center"),
-              # h5("Fifth level title", align = "center"),
-              # br(),
-              # h6("Sixth level title", align = "center"),
               
-              plotOutput("selected_var")
+              textOutput("selected_var"),
+              textOutput("range"),
+              plotOutput("selected_var1")   #plot of points vs price (by varietal)
               
-              ) #End mainPanel ----
+    ) #End mainPanel ----
   ) #End of sidebarLayout ---- 
- 
-
-   
-    
+  
+  
+  
+  
 ) #End of UI fluidPage ----

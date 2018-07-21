@@ -5,9 +5,9 @@ account: erindugan
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 384964
-bundleId: 1492047
+bundleId: 1492422
 url: https://erindugan.shinyapps.io/WineReviews/
-when: 1532115912.40977
+when: 1532135644.00984
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: winecode_clean.R
