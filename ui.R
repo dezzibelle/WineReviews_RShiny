@@ -24,9 +24,10 @@ ui <- fluidPage(
     mainPanel(h1("Price versus Wine Rating", align = "center", style = "color:purple"),
               div(img(src = "bottles.jpeg"), style="text-align: center;"),
               
-              textOutput("selected_var"),
-              textOutput("range"),
-              plotOutput("selected_var1")   #plot of points vs price (by varietal)
+              textOutput("selected_variety"),
+#              textOutput("selected_range"),
+              tableOutput("selected_wines"),
+              plotOutput("price_vs_pts")   #plot of points vs price (by varietal)
               
     ) #End mainPanel ----
   ) #End of sidebarLayout ---- 
