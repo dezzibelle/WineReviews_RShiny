@@ -25,14 +25,14 @@ ui <- fluidPage(
               div(img(src = "bottles.jpeg"), style="text-align: center;"),
               
               textOutput("selected_variety"),
-#              textOutput("selected_range"),
-              tableOutput("selected_wines"),
-              plotOutput("price_vs_pts")   #plot of points vs price (by varietal)
+              # tableOutput("selected_wines"),
+              
+        ## Need to update plot w/ sampled data set & remove constraints (or plot 2 & compare?)
+              # plotOutput("price_vs_pts"),   #plot of points vs price (by varietal)
+              
+              leafletOutput("winemap")
+        
               
     ) #End mainPanel ----
   ) #End of sidebarLayout ---- 
-  
-  
-  
-  
 ) #End of UI fluidPage ----
