@@ -63,7 +63,6 @@ top_varieties = (wine_df %>%
                    distinct(title) %>%
                    summarise(count = n()) %>% 
                    arrange(desc(count)) %>% 
-                   top_n(25,count) %>%
                    select(variety))[[1]]
 
 wine_countries = (wine_df %>% 
@@ -126,7 +125,15 @@ ggplot(data = wine_df %>% filter(variety == "Pinot Noir"), aes(x=ave_score,y=pri
 compare = wine_df %>% distinct(title,price,ave_score) %>% select(title, price, ave_score)
 cor.test(compare$price, compare$ave_score)
 
-
+#Wines by country & state/province
+wine_by_region = wine_df %>% 
+  distinct(title, country, province, variety, price, ave_score) %>%
+  filter(country %in% wine_countries[1:15]) %>%
+  group_by(country, province) %>%
+  summarise(count = n()) %>% 
+  filter(count > 100) %>%
+  arrange(desc(count)) %>%
+  select(country, province)
 
 
 ######## Clean-up Code (removed from Global): #########
@@ -173,6 +180,19 @@ wine_df = wine_df[c("title","winery","variety","designation","year","country",
 #remove temp data
 rm(joined, wine, ave_scores)
 
-#reduces wine_df from 24.7 MB to 22.8 MB
-wine_df2 = wine_df[c("title","winery","variety","designation","year","country","province","price","price_range","taster_name","points","ave_score","point_range")]
+#reduces wine_df from 24.7 MB to 18.7 MB
+wine_df2 = wine_df[c("title","winery","variety","country","province","price","ave_score")] %>%
+  distinct(title,price,ave_score, variety, country) 
+
+
+##PLOTTING HISTOGRAMS w/ ave_scores
+
+gh2 = ggplot(wine_df2,aes(x=ave_score)) + geom_histogram(bins = 21)
+gh2
+
+wine_df3 = wine_df2 %>% filter(variety %in% top_varieties[1:10])
+gh3 = ggplot(wine_df3,aes(x=ave_score)) + geom_histogram(bins = 21, aes(fill=variety))
+
+wine_df4 = wine_df2 %>% filter(country %in% wine_countries[1:5])
+gh4 = ggplot(wine_df4,aes(x=ave_score)) + geom_histogram(bins = 21, aes(fill=country))
 

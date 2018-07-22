@@ -1,4 +1,5 @@
 library(shiny)
+library(shinydashboard)
 library(dplyr)
 library(readr)
 library(tidyr)
@@ -30,11 +31,9 @@ wine_countries = (wine_df %>%
                     arrange(desc(count)) %>% 
                     select(country))[[1]]
 
-tasters = (wine_df %>%
-             select(taster_name) %>%
-             drop_na(taster_name) %>%
-             distinct(taster_name))[[1]]
 
+wine_df2 = wine_df[c("title","winery","variety","country","province","price","ave_score")] %>%
+  distinct(title,price,ave_score, variety, country) 
 
 ###############################
 #---------MAPPING------------#
