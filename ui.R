@@ -4,7 +4,7 @@ library(shiny)
 library(shinydashboard)
 
 dashboardPage(skin = "purple",
-              dashboardHeader(title = "Wine Reviews - Visualized", ###########
+              dashboardHeader(title = "Wine Ratings - Visualized", ###########
                               titleWidth = 275
               ), #end header  
 ## -- SIDEBAR: ######################
@@ -34,13 +34,13 @@ dashboardPage(skin = "purple",
                   
 ## -- SECOND TAB: ######################
                   tabItem(tabName = "ptsPrice", 
-                          h3("Does Wine Rating Correlate with Price?"),
+                          h3("Do Wine Ratings Correlate with Price?"),
                           
                           fluidRow(
                             box(plotOutput("plot1", height = 250)), #plot pts vs. price
                             box(plotOutput("plot2", height = 250))  #plot pts vs. log(price)
                           ),
-                          # h4("A wine's rating and its price have ", correlation),
+                            # h4("A wine's rating and its price have ", correlation),
                           fluidRow(
                             box(plotOutput("hist1", height = 250)), #histogram, color by country 
                             box(plotOutput("hist2", height = 250))  #histogram, color by variety
@@ -71,7 +71,7 @@ dashboardPage(skin = "purple",
                   
 ## -- FOURTH TAB: ######################
                   tabItem(tabName = "wineRegions", 
-                          h3("Top varietal by country:"),
+                          h3("Most popular varietal produced by each country:"),
                           
                           fluidRow(
                             htmlOutput("map", width = 400) 

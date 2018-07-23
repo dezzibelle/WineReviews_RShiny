@@ -35,7 +35,8 @@ wine_df2 = wine_df[c("title","winery","variety","country","province","price","av
   distinct(title,price,ave_score, variety, country) 
 
 #Sampled data set for graphing
-wine_sampdf2 = wine_df2[sample(nrow(wine_df2),2000),]
+set.seed(1)
+wine_sampdf2 = wine_df2[sample(nrow(wine_df2),5000),]
 
 # #Correlation calc:
 # correlation = cor.test(wine_sampdf2$price, wine_sampdf2$ave_score)
