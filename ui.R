@@ -4,12 +4,13 @@ library(shiny)
 library(shinydashboard)
 
 dashboardPage(skin = "purple",
-              dashboardHeader(title = "Wine Reviews - Visualized", #########################
+              dashboardHeader(title = "Wine Reviews - Visualized", ###########
                               titleWidth = 275
               ), #end header  
 ## -- SIDEBAR: ######################
               dashboardSidebar(   
                 width = 275,
+                div(img(src = "bottles.jpeg"), style="text-align: center;"),
                 sidebarMenu(
                   menuItem("Background", tabName = "background", icon = icon("cloud")),
                   menuItem("Ratings vs. Price", tabName = "ptsPrice", icon = icon("dollar")),
@@ -19,36 +20,37 @@ dashboardPage(skin = "purple",
               ), #end sidebar
 ## -- BODY: ######################
               dashboardBody(
-                            div(img(src = "bottles.jpeg"), style="text-align: center;"),  #Fix picture link 
                 tabItems(
-                  
 ## -- FIRST TAB: ######################
-                  tabItem(tabName = "background", title = "Project Background",
-                         h3("Background"),
+                  tabItem(tabName = "background",
+                         h2("Project Background"),
                          br(),
-                         h5("Over 120,000 reviews from Wine Enthusiast Magazine of over 110,000 different wines from 42 countries."),
-                         br(),
-                         h5("Reviews from over 20 tasters."),
-                         br(),
-                         h5("Ratings ranging between 80-100 points and for wines priced at $4-$3300 per bottle.")
-                         
-                  ), #end 1st
+                         h4("* Over 120,000 reviews, 20 different tasters"),
+                         h4(uiOutput("WineMag")),
+                         h4("* More than 110,000 different wines from 42 countries"),
+                         h4("* Ratings ranged between 80-100 points"),
+                         h4("* Wines priced at $4-$3300 per bottle")
+                  ), #end 1st tab
                   
 ## -- SECOND TAB: ######################
-                  tabItem(tabName = "ptsPrice", h3("Does Wine Rating Correlate with Price?"),
+                  tabItem(tabName = "ptsPrice", 
+                          h3("Does Wine Rating Correlate with Price?"),
                           
                           fluidRow(
-                            plotOutput("plot1", height = 250
+                            box(plotOutput("plot1", height = 250)), #plot pts vs. price
+                            box(plotOutput("plot2", height = 250))  #plot pts vs. log(price)
                           ),
+                          # h4("A wine's rating and its price have ", correlation),
                           fluidRow(
-                            box(plotOutput("hist1", height = 250)),
-                            box(plotOutput("hist2", height = 250))
+                            box(plotOutput("hist1", height = 250)), #histogram, color by country 
+                            box(plotOutput("hist2", height = 250))  #histogram, color by variety
                           )
-                          )
-                  ), #end 2nd
+                          
+                  ), #end 2nd tab
 
 ## -- THIRD TAB: ######################
-                  tabItem(tabName = "wineChooser", h3("Choose the best wines based on price range and varietal"),
+                  tabItem(tabName = "wineChooser", 
+                          h3("Choose the best wines based on price range and varietal"),
                           fluidRow(
                           box(
                               selectInput("varietal", 
@@ -65,12 +67,19 @@ dashboardPage(skin = "purple",
                           fluidRow(
                           tableOutput("selected_wines") 
                           )
-                  ), #end 3rd
+                  ), #end 3rd tab
                   
 ## -- FOURTH TAB: ######################
-                  tabItem(tabName = "wineRegions", h3("Best wines in each region")
-                  ) #end 4th
-                  
+                  tabItem(tabName = "wineRegions", 
+                          h3("Top varietal by country:"),
+                          
+                          fluidRow(
+                            htmlOutput("map", width = 400) 
+                                    )
+                          # fluidRow(
+                          #   htmlOutput("pie1")
+                          #         )
+                          ) #end 4th tab
                 ) #end tabItems
               ) #end Body 
 ) #end Page

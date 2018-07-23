@@ -1,5 +1,3 @@
-library(shiny)
-library(shinydashboard)
 library(dplyr)
 library(readr)
 library(tidyr)
@@ -7,6 +5,7 @@ library(ggplot2)
 library(googleVis)
 library(leaflet)
 library(maps)
+library(DT)
 
 ###############################
 #----Load Data & Setup Variables----#
@@ -36,12 +35,17 @@ wine_df2 = wine_df[c("title","winery","variety","country","province","price","av
   distinct(title,price,ave_score, variety, country) 
 
 #Sampled data set for graphing
-wine_sampdf2 = wine_df2[sample(nrow(wine_df2),5000),]
+wine_sampdf2 = wine_df2[sample(nrow(wine_df2),2000),]
+
+# #Correlation calc:
+# correlation = cor.test(wine_sampdf2$price, wine_sampdf2$ave_score)
 
 
 ###############################
 #---------MAPPING------------#
 
-
-# map("world", fill = TRUE, plot = FALSE)
-
+wine_df3 = wine_df2 %>% 
+  group_by(country,variety) %>%
+  summarise(count = n()) %>%
+  arrange(country, desc(count)) %>% 
+  filter(count == max(count)) %>% select(country,variety)

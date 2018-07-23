@@ -120,7 +120,6 @@ ggplot(data = wine_df %>% filter(variety == "Pinot Noir"), aes(x=ave_score,y=pri
   geom_point(aes(color=price)) + coord_cartesian(ylim = c(0,750))
 
 
-
 #Statistics:
 compare = wine_df %>% distinct(title,price,ave_score) %>% select(title, price, ave_score)
 cor.test(compare$price, compare$ave_score)
@@ -185,6 +184,11 @@ wine_df2 = wine_df[c("title","winery","variety","country","province","price","av
   distinct(title,price,ave_score, variety, country) 
 
 
+wine_sampdf2 = wine_df2[sample(nrow(wine_df2),1000),]
+ggplot(wine_sampdf2, aes(x=price,y=ave_score)) + geom_point() + geom_smooth(method = "loess")
+
+ggplot(wine_sampdf2,aes(x=ave_score)) + geom_histogram(bins=21)
+
 ##PLOTTING HISTOGRAMS w/ ave_scores
 
 gh2 = ggplot(wine_df2,aes(x=ave_score)) + geom_histogram(bins = 21)
@@ -195,4 +199,21 @@ gh3 = ggplot(wine_df3,aes(x=ave_score)) + geom_histogram(bins = 21, aes(fill=var
 
 wine_df4 = wine_df2 %>% filter(country %in% wine_countries[1:5])
 gh4 = ggplot(wine_df4,aes(x=ave_score)) + geom_histogram(bins = 21, aes(fill=country))
+
+
+## MAPS!
+
+wine_df3 = wine_df2 %>% 
+  group_by(country,variety) %>%
+  summarise(count = n()) %>%
+  arrange(country, desc(count))
+
+gvisPieChart(wine_df3, labelvar = "country", numvar = "count", sliceVisibilityThreshold = .2)
+
+
+output$plot1 <- renderPlot({
+  ggplot(wine_sampdf2, aes(x=price,y=ave_score)) + 
+    geom_point() + geom_smooth(method = "loess") +
+    coord_cartesian(ylim = c(80,100))
+})
 
