@@ -5,14 +5,21 @@ library(shinydashboard)
 
 
 function(input,output) {
-  set.seed(122)
-  histdata <- rnorm(500)
 
+  output$plot1 <- renderPlot({
+    ggplot(wine_sampdf2, aes(x=price,y=ave_score)) + 
+      geom_point() + geom_smooth(method = "loess") +
+      coord_cartesian(ylim = c(80,100))
+  })
   
+  output$hist1 <- renderPlot({
+    ggplot(wine_sampdf2 %>% filter(country %in% wine_countries[1:10]),aes(x=ave_score)) + 
+      geom_histogram(bins=21, aes(fill=country))
+  })
   
-  output$plot1 <- renderPlot( {
-    data <- histdata[seq_len(input$slider)]
-    hist(data)
+  output$hist2 <- renderPlot({
+    ggplot(wine_sampdf2 %>% filter(variety %in% top_varieties[1:10]),aes(x=ave_score)) + 
+      geom_histogram(bins=21, aes(fill=variety))
   })
   
   output$selected_variety <- renderText({

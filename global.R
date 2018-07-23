@@ -13,7 +13,7 @@ library(maps)
 
 load("wine_dfR.RData")
 
-#create lists for selectors
+#create lists for selectors/filters
 
 top_varieties = (wine_df %>%   
                    group_by(variety) %>% 
@@ -31,9 +31,13 @@ wine_countries = (wine_df %>%
                     arrange(desc(count)) %>% 
                     select(country))[[1]]
 
-
+#Reduced data set
 wine_df2 = wine_df[c("title","winery","variety","country","province","price","ave_score")] %>%
   distinct(title,price,ave_score, variety, country) 
+
+#Sampled data set for graphing
+wine_sampdf2 = wine_df2[sample(nrow(wine_df2),5000),]
+
 
 ###############################
 #---------MAPPING------------#
