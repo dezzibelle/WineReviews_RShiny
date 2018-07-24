@@ -11,6 +11,13 @@ library(DT)
 #----Load Data & Setup Variables----#
 
 load("wine_dfR.RData")
+wine_df = wine_df %>%
+  mutate(price_range = case_when(price <= 10 ~ 1,
+                               price <=25 & price > 10 ~ 2,
+                               price <=50 & price > 25 ~ 3,
+                               price <=100 & price > 50 ~ 4,
+                               price <=500 & price >100 ~ 5,
+                               price > 500 ~ 6))
 
 #create lists for selectors/filters
 

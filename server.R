@@ -53,9 +53,8 @@ function(input,output) {
   output$selected_wines <- renderTable({
     wine_df %>%
       filter(variety == input$varietal,
-             price >= input$pricerange[1] &
-               price <= input$pricerange[2]) %>%
-      distinct(title, country, price, ave_score) %>%
+             price_range == input$pricerange) %>%
+            distinct(title, country, price, ave_score) %>%
       arrange(desc(ave_score),desc(price)) %>%
       mutate(Rank = row_number()) %>%
       rename(Wine = title, Country = country, "Price ($)" = price, Rating = ave_score ) %>%

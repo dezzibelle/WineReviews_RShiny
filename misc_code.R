@@ -29,8 +29,8 @@ descriptors_list = c("apple", "pineapple", "pear", "peach", "lemon", "cherry",
                      "earthy", "dry", "sweet", "peppery", "sour", "bitter", 
                      "crisp", "zesty", "floral")
 
+library(stringr)
 wine_desc = wine %>% mutate(desc = str_match(description, descriptors_list))
-
 
 
 x = wine_df2 %>% 

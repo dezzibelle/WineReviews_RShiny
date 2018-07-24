@@ -149,12 +149,12 @@ wine_df = wine_df %>%
          province = as.factor(province),
          taster_name = as.factor(taster_name),
          variety = as.factor(variety)) %>%
-  mutate(price_range = case_when(price <= 10 ~ "< $10",
-                                 price <=25 & price > 10 ~ "$10-$25",
-                                 price <=50 & price > 25 ~ "$25-$50",
-                                 price <=100 & price > 50 ~ "$50-$100",
-                                 price <=500 & price >100 ~ "$100-$500",
-                                 price > 500 ~ "> $500"))
+  mutate(price_range = case_when(price <= 10 ~ 1,
+                                 price <=25 & price > 10 ~ 12
+                                 price <=50 & price > 25 ~ 3,
+                                 price <=100 & price > 50 ~ 4,
+                                 price <=500 & price >100 ~ 5,
+                                 price > 500 ~ 6))
 
 ave_scores = wine_df %>%
   group_by(title) %>%
@@ -217,3 +217,49 @@ output$plot1 <- renderPlot({
     coord_cartesian(ylim = c(80,100))
 })
 
+
+#Bar Chart - stats page
+ggplot(wine_sampdf2 %>% filter(country %in% wine_countries[1:5]),aes(x=ave_score)) + 
+  geom_bar(position="dodge", aes(fill=country)) + 
+  labs(title = "Chart of Wine Ratings", subtitle = "for Top 10 Wine-Producing Countries") + 
+  scale_x_continuous(name = "Rating") +
+  scale_y_continuous(name = "")
+
+
+
+#
+wbar = wine_sampdf2 %>% 
+  filter(country %in% wine_countries[1:6], 
+         variety %in% top_varieties[1:10]) %>% 
+  group_by(country,variety) %>%
+  summarise(mean_score = mean(ave_score))
+
+#repeat w/ median price
+wbar2 = wine_sampdf2 %>% 
+  filter(country %in% wine_countries[1:5], 
+         variety %in% top_varieties$variety[1:25]) %>% 
+  group_by(country,variety) %>%
+  summarise(median_price = median(price))                             
+ 
+
+library(scales)                              
+ggplot(wbar,aes(x=variety, y=mean_score)) + 
+  geom_col(position="dodge", aes(fill=country)) + 
+  scale_y_continuous(limits=c(75,100),oob = rescale_none) +
+  coord_flip()
+           
+top_varieties2 = (wine_df %>%   
+    group_by(variety) %>% 
+    distinct(title) %>%
+    summarise(count = n()) %>% 
+    arrange(desc(count)) %>% 
+    filter(count > 1200))
+
+
+
+top_var = (wine_df %>%
+             distinct(title,variety) %>%
+             group_by(variety) %>% 
+             summarise(count = n()) %>%
+             arrange(desc(count)) %>% 
+             select(variety))[[1]][1:20]

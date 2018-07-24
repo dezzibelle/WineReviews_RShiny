@@ -50,23 +50,22 @@ dashboardPage(skin = "purple",
 
 ## -- THIRD TAB: ######################
                   tabItem(tabName = "wineChooser", 
-                          h3("Choose the best wines based on price range and varietal"),
+                          h3("Choose the top 20 highest-rated wines based on price range and varietal"),
                           fluidRow(
                           box(
-                              selectInput("varietal", 
-                                          label = "Choose a varietal:",
-                                          choices = top_varieties,
-                                          selected = "Pinot Noir"),height = 125), 
+                            selectInput("varietal", 
+                                        label = "Choose a varietal:",
+                                        choices = top_varieties,
+                                        selected = "Pinot Noir"), 
+                          
+                            radioButtons("pricerange", label = h3("Select a price range:"),
+                                         choices = list("< $10" = 1, "$10 - $25" = 2, "$25 - $50" = 3,
+                                                        "$50 - $100" = 4, "$100 - $500" = 5, "< $500" = 6), 
+                                         selected = 1),
+                            width = 3, height = 350),
                           box(
-                              sliderInput("pricerange",
-                                          label = "Pick a price range ($):",
-                                          min = 0,
-                                          max = 3500,
-                                          value = c(0,50)),height = 125)
-                          ),
-                          fluidRow(
-                          tableOutput("selected_wines") 
-                          )
+                          tableOutput("selected_wines"), width = 9 
+                          ))
                   ), #end 3rd tab
                   
 ## -- FOURTH TAB: ######################
