@@ -12,6 +12,8 @@ library(scales)
 #----Load Data & Setup Variables----#
 
 load("wine_dfR.RData")
+
+#Filter for Price Selector:
 wine_df = wine_df %>%
   mutate(price_range = case_when(price <= 10 ~ 1,
                                price <=25 & price > 10 ~ 2,
@@ -36,16 +38,15 @@ wine_countries = (wine_df %>%
                     summarise(count = n()) %>% 
                     arrange(desc(count)) %>% 
                     select(country))[[1]]
+
 #Reduced data set - for distinct wines, average rating from multiple reviews
 wine_df2 = wine_df[c("title","winery","variety","country","province","price","ave_score")] %>%
   distinct(title,price,ave_score, variety, country) 
 
-#Sampled data set for graphing
+#Sampled data set for graphing (Rating vs. Price)
 set.seed(1)
 wine_sampdf2 = wine_df2[sample(nrow(wine_df2),5000),]
 
-# #Correlation calc:
-# correlation = cor.test(wine_sampdf2$price, wine_sampdf2$ave_score)
 
 # #Data sets for bar graphs
 # wbar1 = wine_df2 %>% 
@@ -63,18 +64,17 @@ wine_sampdf2 = wine_df2[sample(nrow(wine_df2),5000),]
 
 
 ###############################
-#---------MAPPING------------#
+#---------MAP DATA------------#
 
 wine_df3 = wine_df2 %>% 
   group_by(country,variety) %>%
-  summarise(count = n()) %>%
+  summarise(count = n(), "Ave.Rating" = mean(ave_score)) %>%
   arrange(country, desc(count)) %>% 
-  filter(count == max(count)) %>% select(country,variety,count)
+  filter(count == max(count)) %>% select(country,variety,"Ave.Rating")
 
 wine_df4 = wine_df %>%
   filter(country == "US", province != "America") %>%
   group_by(province,variety) %>%
-  summarise(count = n()) %>%
+  summarise(count = n(),"Ave.Rating" = mean(ave_score)) %>%
   arrange(province, desc(count)) %>%
-  filter(count == max(count)) %>% select(province, variety,count)
-
+  filter(count == max(count)) %>% select(province, variety, "Ave.Rating")

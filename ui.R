@@ -24,13 +24,22 @@ dashboardPage(skin = "purple",
                 tabItems(
 ## -- FIRST TAB: ######################
                   tabItem(tabName = "background",
-                         h2("Project Background"),
+                         div(img(src = "grapes2.jpeg"), style="text-align: center;"),
+                         h2("Background", style="text-align: center;"),
+                         
                          br(),
-                         h4("* Over 120,000 reviews, 20 different tasters"),
-                         h4(uiOutput("WineMag")),
+                         h4("* Over 120,000 reviews, 20 different wine tasters"),
                          h4("* More than 110,000 different wines from 42 countries"),
                          h4("* Ratings ranged between 80-100 points"),
-                         h4("* Wines priced at $4-$3300 per bottle")
+                         h4("* Wines priced at $4-$3300 per bottle"),
+                         br(),
+                         h4("Motivation: "),
+                         h5(" - To investigate the relationship between a wine's 
+                            rating and its price, origin, and varietal"),
+                         br(),
+                         h5("Sources: ",uiOutput("WineMag")),
+                         h5(uiOutput("Kaggle"))
+                         
                   ), #end 1st tab
                   
 ## -- SECOND TAB: ######################
@@ -49,13 +58,13 @@ dashboardPage(skin = "purple",
                           box(
                             radioButtons("swapPlot",
                                          label = "Choose a graph:",
-                                         choices = list("Variety vs. Average Rating" = 1,
-                                                        "Variety vs. Median Price" = 2),
+                                         choices = list("Varietal vs. Average Rating" = 1,
+                                                        "Varietal vs. Median Price" = 2),
                                          selected = 1,
                                          inline = TRUE)
                           ),
                           box(
-                            plotOutput("barGraph", height = 500),width = 12
+                            plotOutput("barGraph", height = 450),width = 12
                           )
                   ), #end 3rd tab
 
@@ -88,7 +97,7 @@ dashboardPage(skin = "purple",
                   
 ## -- FIFTH TAB: ######################
                   tabItem(tabName = "wineRegions", 
-                          h3("Most Popular (Reviewed) Varietal Produced by Each Region:"),
+                          h3("Average Rating for the Most Popular Varietal Produced by Each Region:"),
                           fluidRow(
                             box(htmlOutput("map"), width = 12 )
                           ),
