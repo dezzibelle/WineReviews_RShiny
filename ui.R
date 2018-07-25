@@ -64,13 +64,13 @@ dashboardPage(skin = "purple",
                                          inline = TRUE)
                           ),
                           box(
-                            plotOutput("barGraph", height = 450),width = 12
+                            plotOutput("barGraph", height = 600),width = 12
                           )
                   ), #end 3rd tab
 
 ## -- FOURTH TAB: ######################
                   tabItem(tabName = "wineChooser", 
-                          h3("Choose the Top 20 Highest-Rated Wines Based on Price Range and Varietal"),
+                          h3("Top 20 Highest-Rated Wines Based on Price Range and Varietal"),
                           fluidRow(
                           box(
                             selectInput("varietal", 
