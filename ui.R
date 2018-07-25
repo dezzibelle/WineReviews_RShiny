@@ -12,11 +12,12 @@ dashboardPage(skin = "purple",
                 width = 275,
                 div(img(src = "bottles.jpeg"), style="text-align: center;"),
                 sidebarMenu(
-                  menuItem("Background", tabName = "background", icon = icon("cloud")),
-                  menuItem("Ratings vs. Price", tabName = "ptsPrice", icon = icon("dollar")),
-                  menuItem("Wine Chooser", tabName = "wineChooser", icon = icon("glass")),
-                  menuItem("Wines by Region", tabName = "wineRegions", icon = icon("globe"))
-                ) #end sidebarMenu
+                  menuItem("Background", tabName = "background", icon = icon("leaf")),
+                  menuItem("Ratings vs. Price", tabName = "ptsPrice", icon = icon("leaf")),
+                  menuItem("Compare Countries & Varietals", tabName = "barPlot", icon = icon("leaf")),
+                  menuItem("Wine Selector", tabName = "wineChooser", icon = icon("leaf")),
+                  menuItem("Top Varietal by Region", tabName = "wineRegions", icon = icon("leaf"))
+                  ) #end sidebarMenu
               ), #end sidebar
 ## -- BODY: ######################
               dashboardBody(
@@ -37,20 +38,30 @@ dashboardPage(skin = "purple",
                           h3("Do Wine Ratings Correlate with Price?"),
                           
                           fluidRow(
-                            box(plotOutput("plot1", height = 250)), #plot pts vs. price
-                            box(plotOutput("plot2", height = 250))  #plot pts vs. log(price)
-                          ),
-                            # h4("A wine's rating and its price have ", correlation),
-                          fluidRow(
-                            box(plotOutput("hist1", height = 250)), #histogram, color by country 
-                            box(plotOutput("hist2", height = 250))  #histogram, color by variety
+                            box(plotOutput("plot1", height = 250),  #plot pts vs. price
+                                plotOutput("plot2", height = 250), width = 12) #plot pts vs. log(price)
                           )
-                          
                   ), #end 2nd tab
 
 ## -- THIRD TAB: ######################
+                  tabItem(tabName = "barPlot", 
+                          h3("Compare Popular Varietals from the Top 5 Wine-Producing Countries"),
+                          box(
+                            radioButtons("swapPlot",
+                                         label = "Choose a graph:",
+                                         choices = list("Variety vs. Average Rating" = 1,
+                                                        "Variety vs. Median Price" = 2),
+                                         selected = 1,
+                                         inline = TRUE)
+                          ),
+                          box(
+                            plotOutput("barGraph", height = 500),width = 12
+                          )
+                  ), #end 3rd tab
+
+## -- FOURTH TAB: ######################
                   tabItem(tabName = "wineChooser", 
-                          h3("Choose the top 20 highest-rated wines based on price range and varietal"),
+                          h3("Choose the Top 20 Highest-Rated Wines Based on Price Range and Varietal"),
                           fluidRow(
                           box(
                             selectInput("varietal", 
@@ -58,28 +69,34 @@ dashboardPage(skin = "purple",
                                         choices = top_varieties,
                                         selected = "Pinot Noir"), 
                           
-                            radioButtons("pricerange", label = h3("Select a price range:"),
-                                         choices = list("< $10" = 1, "$10 - $25" = 2, "$25 - $50" = 3,
-                                                        "$50 - $100" = 4, "$100 - $500" = 5, "< $500" = 6), 
+                            radioButtons("pricerange", 
+                                         label = h3("Select a price range:"),
+                                         choices = list("< $10" = 1, 
+                                                        "$10 - $25" = 2, 
+                                                        "$25 - $50" = 3,
+                                                        "$50 - $100" = 4, 
+                                                        "$100 - $500" = 5, 
+                                                        "> $500" = 6), 
                                          selected = 1),
-                            width = 3, height = 350),
+                            width = 3, 
+                            height = 350),
                           box(
                           tableOutput("selected_wines"), width = 9 
-                          ))
-                  ), #end 3rd tab
+                          )
+                          )
+                  ), #end 4th tab
                   
-## -- FOURTH TAB: ######################
+## -- FIFTH TAB: ######################
                   tabItem(tabName = "wineRegions", 
-                          h3("Most popular varietal produced by each country:"),
-                          
+                          h3("Most Popular (Reviewed) Varietal Produced by Each Region:"),
                           fluidRow(
-                            htmlOutput("map", width = 400) 
-                                    )
-                          # fluidRow(
-                          #   htmlOutput("pie1")
-                          #         )
-                          ) #end 4th tab
-                ) #end tabItems
+                            box(htmlOutput("map"), width = 12 )
+                          ),
+                          fluidRow(
+                            box(htmlOutput("map2"), width = 12)
+                          )
+                  )
+                ) #end tabItems #####
               ) #end Body 
 ) #end Page
 

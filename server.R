@@ -27,28 +27,53 @@ function(input,output) {
       scale_x_continuous(name = "log(Price ($))") +
       scale_y_continuous(name = "Points")
   })
-    
-  output$hist1 <- renderPlot({
-    ggplot(wine_sampdf2 %>% filter(country %in% wine_countries[1:10]),aes(x=ave_score)) + 
-      geom_histogram(bins=21, aes(fill=country)) + 
-      labs(title = "Histogram of Wine Ratings", subtitle = "for Top 10 Wine-Producing Countries") + 
-      scale_x_continuous(name = "Rating") +
-      scale_y_continuous(name = "")
+ 
+  #Data sets for bar graphs
+  wbar1 = wine_df2 %>% 
+    filter(country %in% wine_countries[1:5], 
+           variety %in% top_varieties[1:10]) %>% 
+    group_by(country,variety) %>%
+    summarise(mean_rating = mean(ave_score))
+  
+  wbar2 = wine_df2 %>%
+    filter(country %in% wine_countries[1:5],
+           variety %in% top_varieties[1:10]) %>%
+    group_by(country,variety) %>%
+    summarise(median_price = median(price))
+ 
+  output$barGraph <- renderPlot ({
+    if (input$swapPlot == 2) {
+      ggplot(wbar2,aes(x=variety, y=median_price)) + 
+        geom_col(position="dodge", aes(fill=country)) + 
+        scale_y_continuous(limits=c(5,65), oob = rescale_none) +
+        coord_flip() +
+        labs(title = "Median Varietal Prices by Country")
+    }  
+    else  {
+      ggplot(wbar1,aes(x=variety, y=mean_rating)) + 
+        geom_col(position="dodge", aes(fill=country)) + 
+        scale_y_continuous(limits=c(80,95), oob = rescale_none) +
+        coord_flip() + 
+        labs(title = "Average Varietal Ratings by Country")
+    }
   })
   
-  output$hist2 <- renderPlot({
-    ggplot(wine_sampdf2 %>% filter(variety %in% top_varieties[1:10]),aes(x=ave_score)) + 
-      geom_histogram(bins=21, aes(fill=variety)) + 
-      labs(title = "Histogram of Wine Ratings", subtitle = "for Top 10 Wine Varietals") + 
-      scale_x_continuous(name = "Rating") +
-      scale_y_continuous(name = "")
-  })
-  
-  output$selected_variety <- renderText({
-    paste0("These are the the top-rated ", 
-           input$varietal, " wines with a price between $",
-           input$pricerange[1], " and $", input$pricerange[2],".")
-  })
+  # output$hist1 <- renderPlot({
+  #   ggplot(wine_sampdf2 %>% filter(country %in% wine_countries[1:10]),aes(x=ave_score)) + 
+  #     geom_histogram(bins=21, aes(fill=country)) + 
+  #     labs(title = "Histogram of Wine Ratings", subtitle = "for Top 10 Wine-Producing Countries") + 
+  #     scale_x_continuous(name = "Rating") +
+  #     scale_y_continuous(name = "")
+  # })
+  # 
+  # output$hist2 <- renderPlot({
+  #   ggplot(wine_sampdf2 %>% filter(variety %in% top_varieties[1:10]),aes(x=ave_score)) + 
+  #     geom_histogram(bins=21, aes(fill=variety)) + 
+  #     labs(title = "Histogram of Wine Ratings", subtitle = "for Top 10 Wine Varietals") + 
+  #     scale_x_continuous(name = "Rating") +
+  #     scale_y_continuous(name = "")
+  # })
+  #
   
   output$selected_wines <- renderTable({
     wine_df %>%
@@ -63,14 +88,19 @@ function(input,output) {
   },digits=0)
   
   output$map <- renderGvis({
-    gvisGeoChart(wine_df3, "country", hovervar = "variety")
+    gvisGeoChart(wine_df3, "country", hovervar = "variety", 
+                 colorvar = "count",
+                 options=list(colorAxis="{colors:['pink','maroon']}",
+                              backgroundColor="lightblue")
+    )
   })
-      
-  # output$pie1 <- renderGvis({
-  #   gvisPieChart(wine_df3$country, 
-  #                labelvar = "variety", 
-  #                numvar = "count", 
-  #                options = (sliceVisibilityThreshold = .25))
-  # })
+  
+  output$map2 <- renderGvis({
+    gvisGeoChart(wine_df4, "province", hovervar = "variety",
+                 colorvar = "count", 
+                 options=list(region="US", displayMode="regions", resolution="provinces",
+                              colorAxis="{colors:['pink','maroon']}",backgroundColor="lightblue")
+                 )
+  })
   
 }
