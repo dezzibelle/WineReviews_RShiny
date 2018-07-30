@@ -23,24 +23,27 @@ dashboardPage(skin = "purple",
               dashboardBody(
                 tabItems(
 ## -- FIRST TAB: ######################
-                  tabItem(tabName = "background",
-                         div(img(src = "grapes2.jpeg"), style="text-align: center;"),
-                         h2("Background", style="text-align: center;"),
-                         
-                         br(),
-                         h4("* Over 120,000 reviews, 20 different wine tasters"),
-                         h4("* More than 110,000 different wines from 42 countries"),
-                         h4("* Ratings ranged between 80-100 points"),
-                         h4("* Wines priced at $4-$3300 per bottle"),
-                         br(),
-                         h4("Motivation: "),
-                         h5(" - To investigate the relationship between a wine's 
+tabItem(tabName = "background",
+        div(img(src = "grapes2.jpeg"), style="text-align: center;"),
+        fluidRow(
+          box(
+            h2("Background", style="text-align: center;"),
+            
+            br(),
+            h4("* Over 120,000 reviews, 20 different wine tasters"),
+            h4("* More than 110,000 different wines from 42 countries"),
+            h4("* Ratings ranged between 80-100 points"),
+            h4("* Wines priced at $4-$3300 per bottle"),
+            br(),
+            h4("Motivation: "),
+            h5(" - To investigate the relationship between a wine's 
                             rating and its price, origin, and varietal"),
-                         br(),
-                         h5("Sources: ",uiOutput("WineMag")),
-                         h5(uiOutput("Kaggle"))
-                         
-                  ), #end 1st tab
+            br(),
+            h5("Sources: ",uiOutput("WineMag")),
+            h5(uiOutput("Kaggle")), width = 12
+          )
+        )
+), #end 1st tab
                   
 ## -- SECOND TAB: ######################
                   tabItem(tabName = "ptsPrice", 
@@ -55,17 +58,24 @@ dashboardPage(skin = "purple",
 ## -- THIRD TAB: ######################
                   tabItem(tabName = "barPlot", 
                           h3("Compare Popular Varietals from the Top 5 Wine-Producing Countries"),
-                          box(
-                            radioButtons("swapPlot",
-                                         label = "Choose a graph:",
-                                         choices = list("Varietal vs. Average Rating" = 1,
-                                                        "Varietal vs. Median Price" = 2),
-                                         selected = 1,
-                                         inline = TRUE)
+                          fluidRow(
+                            box(
+                            # radioButtons("swapPlot",
+                            #              label = "Choose a graph:",
+                            #              choices = list("Varietal vs. Average Rating" = 1,
+                            #                             "Varietal vs. Median Price" = 2),
+                            #              selected = 1,
+                            #              inline = TRUE),
+                            checkboxGroupInput("pickVar",
+                                               label = "Choose varietal(s) to compare:",
+                                               choices = sort(top_varieties[1:10]),
+                                               selected = sort(top_varieties[1:10])), width = 2
                           ),
                           box(
-                            plotOutput("barGraph", height = 600),width = 12
-                          )
+                            plotOutput("barGraph1", height = 550),width = 5),
+                          box(
+                            plotOutput("barGraph2", height = 550),width = 5
+                          ))
                   ), #end 3rd tab
 
 ## -- FOURTH TAB: ######################
@@ -75,22 +85,37 @@ dashboardPage(skin = "purple",
                           box(
                             selectInput("varietal", 
                                         label = "Choose a varietal:",
-                                        choices = top_varieties,
-                                        selected = "Pinot Noir"), 
+                                        choices = top_var,
+                                        selected = "All"),
                           
                             radioButtons("pricerange", 
-                                         label = h3("Select a price range:"),
-                                         choices = list("< $10" = 1, 
+                                         label = "Select a price range:",
+                                         choices = list(#"Any" = 0,
+                                                        "< $10" = 1, 
                                                         "$10 - $25" = 2, 
                                                         "$25 - $50" = 3,
                                                         "$50 - $100" = 4, 
                                                         "$100 - $500" = 5, 
                                                         "> $500" = 6), 
                                          selected = 1),
-                            width = 3, 
-                            height = 350),
+                            checkboxGroupInput("pointcategory",
+                                               label = "Select desired rating(s):",
+                                               choices = list("Classic",
+                                                              "Superb",
+                                                              "Excellent",
+                                                              "Very Good",
+                                                              "Good",
+                                                              "Acceptable"),
+                                               selected = list("Classic",
+                                                               "Superb",
+                                                               "Excellent",
+                                                               "Very Good",
+                                                               "Good",
+                                                               "Acceptable")),
+                            width = 2, 
+                            height = 600),
                           box(
-                          tableOutput("selected_wines"), width = 9 
+                            DT::dataTableOutput("selected_wines"), width = 10 
                           )
                           )
                   ), #end 4th tab
